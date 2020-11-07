@@ -2,18 +2,21 @@
 This Project is explain reason to need interface, abstract class in java.
 
 ```
-
 まずarraylistは下のような関係で継承していっている。
 list(interface)→abstractarraylist(abstract class)→arraylist(class)
 
+前提として
 Interfaceとは、クラスの関数名、戻り値の型、引数の型だけ定義したもので、
 こうすると関数内部の機能と関数名を分けることができる。
+
 なぜこのようなものを作らないといけないかというと、
 例えばあなたは次の二つのスクレイピングのclassを作る必要があるとする。
 それぞれdmmとamazonをスクレイピングをするclassだ。
 それぞれのclassにまずサイトにloginするためのloginSite()という関数を定義する必要があるとする。
 この関数が実際に行う処理はdmmとamazonでcssやhtmlが違うため当然違う。
 
+Interfaceを使わない場合はそれぞれのclassで
+似たような処理の関数を書類に書くなどして人間側で管理、把握する必要が出る。
 スクレイピングしたいサイト、classが二つだけなら間違いは無いが、
 これがいくつもある場合はどうなるか？
 
@@ -22,7 +25,6 @@ login(),setupLogin()など似たような名前の関数を定義してしまっ
 Login処理の一部だけ不必要、不自然に切り取った処理の関数など似て非なる処理を行う関数を定義してしまい保守性が低下する可能性がある。
 
 このため実際使うclass側で処理を定義する必要があり、そのclassで必ずこのような関数を使うということが約束されている場合はinterfaceという形で継承元に関数の定義だけを書いておくと管理がしやすい。
-
 この管理を行いやすくするためにinterfaceを継承したclassではinterfaceで定義した関数を定義することがコンパイラに強制される。
 
 Abstract class では同様のことをprotected,privateのメンバでやる場合
@@ -34,16 +36,20 @@ Abstract class では同様のことをprotected,privateのメンバでやる場
 継承先のclassの差異をあまり気にすることなく、
 Classの関数を使うことができ、かつ管理がしやすいため
 コードの保守性も高い。
-(Arraylistのadd関数、listのadd関数、vectorのadd関数、またそれらの関数の差異は？それを気にして作業したことはおそらくほとんどの人がないし、知らなくても困ったことはないだろう。)
+(Arraylistのadd関数、listのadd関数、vectorのadd関数、またそれらの関数の内部実装の差異は？それを気にして作業したことはおそらくほとんどの人がないし、
+知らなくても困ったことはないことに気がつけば納得してもらえると思う。)
 これらの理由から、interface, abstract class,classという形でオブジェクトを分けて定義している。
 
 他にはinterface側にpublicの関数を押し出すと、
 継承先のclassが非推奨になる、後方互換のために残しているレガシーなclassである、その他なんらかの理由で
-同じinterfaceの継承元の違うclassを使う必要が出た場合。
+同じinterfaceの継承元の違うclassを使う必要が出た場合にも使う。
 (Arraylistでいうと後方互換のために残してあるレガシーなclassであるvectorがこれに相当する。)
+ここで継承先のclassのインスタンスは継承元のインスタンスでもあることに注目してよくある下のコードを見てみよう。
+
 interface名 変数名 = new 継承先のclass
-の継承先のclassだけ変えればコードが動く。
-継承先のclassのインスタンスは継承元のインスタンスでもあるからだ。
+
+このコードは継承先のclassを変えただけで動く。
+
 （ただ実際には継承先のclassでしか定義されていない関数が使われていたりして
 動かないことやclass設計が大きく変わる時はinterfaceごとドナドナされることもある。しかし意識して設計するとやはり変更箇所は少なくなり、保守性は上がる。）
 
@@ -51,7 +57,7 @@ interface名 変数名 = new 継承先のclass
 関数内部にinterface先のclassの差異を吸収する処理を描く事ができるため、関数内に継承先のclassの差異を閉じ込める事ができ、変更に強くなる。
 (実際やる場合は関数内部でInstanceof などを用いて、classを識別、classごとの処理を関数内部に書くことでclassの差異を関数内に閉じ込める。)
 
-Python,rubyなどの動的な言語はinterfaceによるこれらの恩恵を受けづらく、
+これらのinterfaceにおける恩恵はPython,rubyなどの動的な言語は受けづらく、
 型がある言語の一つのアドバンテージのため、java,csharp開発者などは
 これらのことはぜひともマスターしたい。
 ```
